@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Notepad
 {
-    class NotepadHandler
+    public class NotepadHandler
     {
         private bool _isNew;
-        private TextSaver _saveMethod;
+        private ITextSaver _saveMethod;
 
-        public NotepadHandler(TextSaver saveMethod)
+        public NotepadHandler(ITextSaver saveMethod)
         {
             _isNew = true;
             _saveMethod = saveMethod;

@@ -13,18 +13,18 @@ namespace Notepad
         Saved,
         NotSaved
     }
-    abstract class TextSaver
+    public interface ITextSaver
     {
-        public abstract Result Save(bool isNew, string text);
-        public abstract Result SaveAs(string text);
-        public abstract string Load();
+        Result Save(bool isNew, string text);
+        Result SaveAs(string text);
+        string Load();
     }
 
-    class FileSystemSaver : TextSaver
+    public class FileSystemSaver : ITextSaver
     {
-        private string _filePath; // just test
+        private string _filePath;
 
-        public override Result Save(bool isNew, string text)
+        public Result Save(bool isNew, string text)
         {
             if (isNew)
             {
@@ -40,12 +40,12 @@ namespace Notepad
             return Result.NotSaved;
         }
 
-        public override Result SaveAs(string text)
+        public Result SaveAs(string text)
         {
             return Save(true, text);
         }
 
-        public override string Load()
+        public string Load()
         {
             var dialog = new OpenFileDialog();
             dialog.ShowDialog();
