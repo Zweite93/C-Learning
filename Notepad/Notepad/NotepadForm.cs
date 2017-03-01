@@ -87,6 +87,17 @@ namespace Notepad
             }
         }
 
+        private void FontClickEventHandler(object sender, EventArgs e)
+        {
+            var dialogInstance = new FontSizeDialog();
+            dialogInstance.ShowDialog();
+            if (dialogInstance.DialogResult == DialogResult.OK)
+            {
+                textBox1.Font = new Font(textBox1.Font.FontFamily, dialogInstance.FontSizeValue);
+                SubscribeContentChangesTracking(false);
+            }
+        }
+
         private void TextChangedEventHandler(object sender, EventArgs e)
         {
             SubscribeContentChangesTracking(false);
@@ -98,5 +109,7 @@ namespace Notepad
                 if (AskIfWantToSave() == DialogResult.Cancel)
                     e.Cancel = true;
         }
+
+
     }
 }
