@@ -16,7 +16,6 @@ namespace Notepad
     public interface ITextSaver
     {
         Result Save(bool isNew, string text);
-        Result SaveAs(string text);
         string Load();
     }
 
@@ -38,11 +37,6 @@ namespace Notepad
                 return Result.Saved;
             }
             return Result.NotSaved;
-        }
-
-        public Result SaveAs(string text)
-        {
-            return Save(true, text);
         }
 
         public string Load()

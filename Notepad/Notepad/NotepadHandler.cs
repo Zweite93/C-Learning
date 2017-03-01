@@ -10,11 +10,13 @@ namespace Notepad
     {
         private bool _isNew;
         private ITextSaver _saveMethod;
+        private ISettingsSaver<Settings> _settingsSaveMethod;
 
-        public NotepadHandler(ITextSaver saveMethod)
+        public NotepadHandler(ITextSaver saveMethod, ISettingsSaver<Settings> settingsSaveMethod)
         {
             _isNew = true;
             _saveMethod = saveMethod;
+            _settingsSaveMethod = settingsSaveMethod;
 
         }
 
@@ -31,7 +33,7 @@ namespace Notepad
 
         public Result SaveAs(string Text)
         {
-            if (_saveMethod.SaveAs(Text) == Result.Saved)
+            if (_saveMethod.Save(true, Text) == Result.Saved)
             {
                 _isNew = false;
                 return Result.Saved;
@@ -41,8 +43,18 @@ namespace Notepad
 
         public string Load()
         {
-            return _saveMethod.Load();
             _isNew = true;
+            return _saveMethod.Load();
+        }
+
+        public void SaveSettings(Settings settings)
+        {
+            _settingsSaveMethod.Save(settings);
+        }
+
+        public Settings LoadSettings()
+        {
+            return _settingsSaveMethod.Load();
         }
     }
 }

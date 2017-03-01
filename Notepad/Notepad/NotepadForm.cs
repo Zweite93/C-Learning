@@ -13,13 +13,15 @@ namespace Notepad
     public partial class NotepadForm : Form
     {
         private NotepadHandler notepadHandlerInstance;
+        private Settings settings;
         private bool _contentHasBeenChanged;
-
 
         public NotepadForm()
         {
             InitializeComponent();
-            notepadHandlerInstance = new NotepadHandler(new FileSystemSaver());
+            notepadHandlerInstance = new NotepadHandler(new FileSystemSaver(), new FileSystemSettingsSaver());
+            settings = notepadHandlerInstance.LoadSettings();
+            ChangeFontSize(settings.FontSize);
         }
 
         private DialogResult AskIfWantToSave()
@@ -27,24 +29,29 @@ namespace Notepad
             var messageBoxResult = MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNoCancel);
             if (messageBoxResult == DialogResult.Yes)
             {
-                notepadHandlerInstance.Save(textBox1.Text);
+                notepadHandlerInstance.Save(mainTextBox.Text);
             }
             return messageBoxResult;
         }
 
         private void Clear()
         {
-            textBox1.Clear();
-            notepadHandlerInstance = new NotepadHandler(new FileSystemSaver());
+            mainTextBox.Clear();
+            notepadHandlerInstance = new NotepadHandler(new FileSystemSaver(), new FileSystemSettingsSaver());
         }
 
         private void SubscribeContentChangesTracking(bool subscribe)
         {
             if (subscribe)
-                textBox1.TextChanged += TextChangedEventHandler;
+                mainTextBox.TextChanged += TextChangedEventHandler;
             else
-                textBox1.TextChanged -= TextChangedEventHandler;
+                mainTextBox.TextChanged -= TextChangedEventHandler;
             _contentHasBeenChanged = !subscribe;
+        }
+
+        private void ChangeFontSize(float fontSize)
+        {
+            mainTextBox.Font = new Font(mainTextBox.Font.FontFamily, fontSize);
         }
 
         private void NewClickEventHandler(object sender, EventArgs e)
@@ -59,14 +66,14 @@ namespace Notepad
 
         private void SaveClickEventHandler(object sender, EventArgs e)
         {
-            if (notepadHandlerInstance.Save(textBox1.Text) == Result.Saved)
+            if (notepadHandlerInstance.Save(mainTextBox.Text) == Result.Saved)
                 if (_contentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
         }
 
         private void SaveAsClickEventHandler(object sender, EventArgs e)
         {
-            if (notepadHandlerInstance.SaveAs(textBox1.Text) == Result.Saved)
+            if (notepadHandlerInstance.SaveAs(mainTextBox.Text) == Result.Saved)
                 if (_contentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
         }
@@ -80,21 +87,22 @@ namespace Notepad
             string textFromLoadMethod = notepadHandlerInstance.Load();
             if (textFromLoadMethod != null)
             {
-                textBox1.Text = textFromLoadMethod;
+                mainTextBox.Text = textFromLoadMethod;
                 if (_contentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
-                textBox1.TextChanged += TextChangedEventHandler;
+                mainTextBox.TextChanged += TextChangedEventHandler;
             }
         }
 
         private void FontClickEventHandler(object sender, EventArgs e)
         {
-            var dialogInstance = new FontSizeDialog();
+            var dialogInstance = new FontSizeDialog(mainTextBox.Font.Size);
             dialogInstance.ShowDialog();
             if (dialogInstance.DialogResult == DialogResult.OK)
             {
-                textBox1.Font = new Font(textBox1.Font.FontFamily, dialogInstance.FontSizeValue);
-                SubscribeContentChangesTracking(false);
+                ChangeFontSize(dialogInstance.FontSize);
+                settings.FontSize = dialogInstance.FontSize;
+                notepadHandlerInstance.SaveSettings(settings);
             }
         }
 
@@ -109,7 +117,5 @@ namespace Notepad
                 if (AskIfWantToSave() == DialogResult.Cancel)
                     e.Cancel = true;
         }
-
-
     }
 }

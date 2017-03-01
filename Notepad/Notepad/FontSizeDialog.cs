@@ -12,11 +12,12 @@ namespace Notepad
 {
     public partial class FontSizeDialog : Form
     {
-        public float FontSizeValue { get; private set; }
+        public float FontSize { get; private set; }
 
-        public FontSizeDialog()
+        public FontSizeDialog(float defaultFontSize)
         {
             InitializeComponent();
+            FontSizeTextBox.Text = defaultFontSize.ToString();
         }
         
 
@@ -26,7 +27,7 @@ namespace Notepad
             Single.TryParse(FontSizeTextBox.Text, out tempFloatForTryParse);
             if (tempFloatForTryParse > 0)
             {
-                FontSizeValue = tempFloatForTryParse;
+                FontSize = tempFloatForTryParse;
                 this.Close();
                 DialogResult =  DialogResult.OK;
             }
