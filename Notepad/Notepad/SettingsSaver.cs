@@ -8,19 +8,15 @@ using System.IO;
 
 namespace Notepad
 {
-    public interface ISettingsSaver<T>
+    public interface ISettingsSaver
     {
-        void Save(T settings);
-        T Load();
+        void Save(Settings settings);
+        Settings Load();
     }
 
-    public class FileSystemSettingsSaver : ISettingsSaver<Settings>
+    public class FileSystemSettingsSaver : ISettingsSaver
     {
         private const string DefaultFileName = "./settings.json";
-        public FileSystemSettingsSaver()
-        {
-
-        }
 
         public void Save(Settings settings)
         {

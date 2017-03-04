@@ -12,16 +12,16 @@ namespace Notepad
 {
     public partial class NotepadForm : Form
     {
-        private NotepadHandler notepadHandlerInstance;
-        private Settings settings;
+        private NotepadHandler _notepadHandlerInstance;
+        private Settings _settings;
         private bool _contentHasBeenChanged;
 
-        public NotepadForm()
+        public NotepadForm(NotepadHandler notepadHandlerInstance)
         {
             InitializeComponent();
-            notepadHandlerInstance = new NotepadHandler(new FileSystemSaver(), new FileSystemSettingsSaver());
-            settings = notepadHandlerInstance.LoadSettings();
-            ChangeFontSize(settings.FontSize);
+            _notepadHandlerInstance = notepadHandlerInstance;
+            _settings = _notepadHandlerInstance.LoadSettings();
+            ChangeFontSize(_settings.FontSize);
         }
 
         private DialogResult AskIfWantToSave()
@@ -29,7 +29,7 @@ namespace Notepad
             var messageBoxResult = MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNoCancel);
             if (messageBoxResult == DialogResult.Yes)
             {
-                notepadHandlerInstance.Save(mainTextBox.Text);
+                _notepadHandlerInstance.Save(mainTextBox.Text);
             }
             return messageBoxResult;
         }
@@ -37,7 +37,7 @@ namespace Notepad
         private void Clear()
         {
             mainTextBox.Clear();
-            notepadHandlerInstance = new NotepadHandler(new FileSystemSaver(), new FileSystemSettingsSaver());
+            _notepadHandlerInstance = new NotepadHandler(new FileSystemSaver(), new FileSystemSettingsSaver());
         }
 
         private void SubscribeContentChangesTracking(bool subscribe)
@@ -66,14 +66,14 @@ namespace Notepad
 
         private void SaveClickEventHandler(object sender, EventArgs e)
         {
-            if (notepadHandlerInstance.Save(mainTextBox.Text) == Result.Saved)
+            if (_notepadHandlerInstance.Save(mainTextBox.Text) == Result.Saved)
                 if (_contentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
         }
 
         private void SaveAsClickEventHandler(object sender, EventArgs e)
         {
-            if (notepadHandlerInstance.SaveAs(mainTextBox.Text) == Result.Saved)
+            if (_notepadHandlerInstance.SaveAs(mainTextBox.Text) == Result.Saved)
                 if (_contentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
         }
@@ -84,7 +84,7 @@ namespace Notepad
                 if (AskIfWantToSave() == DialogResult.Cancel)
                     return;
 
-            string textFromLoadMethod = notepadHandlerInstance.Load();
+            string textFromLoadMethod = _notepadHandlerInstance.Load();
             if (textFromLoadMethod != null)
             {
                 mainTextBox.Text = textFromLoadMethod;
@@ -101,8 +101,8 @@ namespace Notepad
             if (dialogInstance.DialogResult == DialogResult.OK)
             {
                 ChangeFontSize(dialogInstance.FontSize);
-                settings.FontSize = dialogInstance.FontSize;
-                notepadHandlerInstance.SaveSettings(settings);
+                _settings.FontSize = dialogInstance.FontSize;
+                _notepadHandlerInstance.SaveSettings(_settings);
             }
         }
 

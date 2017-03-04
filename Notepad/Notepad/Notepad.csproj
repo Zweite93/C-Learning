@@ -54,6 +54,7 @@
     <Compile Include="FontSizeDialog.Designer.cs">
       <DependentUpon>FontSizeDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="IoCContainer.cs" />
     <Compile Include="NotepadForm.cs">
       <SubType>Form</SubType>
     </Compile>

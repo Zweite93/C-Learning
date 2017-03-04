@@ -10,9 +10,9 @@ namespace Notepad
     {
         private bool _isNew;
         private ITextSaver _saveMethod;
-        private ISettingsSaver<Settings> _settingsSaveMethod;
+        private ISettingsSaver _settingsSaveMethod;
 
-        public NotepadHandler(ITextSaver saveMethod, ISettingsSaver<Settings> settingsSaveMethod)
+        public NotepadHandler(ITextSaver saveMethod, ISettingsSaver settingsSaveMethod)
         {
             _isNew = true;
             _saveMethod = saveMethod;
