@@ -3,3 +3,5 @@
 /Notepad/UnitTest/bin/
 /Notepad/UnitTest/obj/
 *.suo
+/Notepad/Notepad/bin/Debug
+/Notepad/Notepad/obj/Debug

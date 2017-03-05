@@ -6,18 +6,27 @@ using System.Threading.Tasks;
 
 namespace Notepad
 {
-    public class NotepadHandler
+    public interface INotepadModel
+    {
+        Result Save(string Text);
+        Result SaveAs(string Text);
+        string Load();
+        void SaveSettings(Settings settings);
+        Settings LoadSettings();
+        void Clear();
+    }
+
+    public class NotepadModel : INotepadModel
     {
         private bool _isNew;
         private ITextSaver _saveMethod;
         private ISettingsSaver _settingsSaveMethod;
 
-        public NotepadHandler(ITextSaver saveMethod, ISettingsSaver settingsSaveMethod)
+        public NotepadModel(ITextSaver saveMethod, ISettingsSaver settingsSaveMethod)
         {
             _isNew = true;
             _saveMethod = saveMethod;
             _settingsSaveMethod = settingsSaveMethod;
-
         }
 
         public Result Save(string Text)
@@ -55,6 +64,11 @@ namespace Notepad
         public Settings LoadSettings()
         {
             return _settingsSaveMethod.Load();
+        }
+
+        public void Clear()
+        {
+            _isNew = true;
         }
     }
 }

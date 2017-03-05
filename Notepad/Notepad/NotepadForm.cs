@@ -10,18 +10,27 @@ using System.Windows.Forms;
 
 namespace Notepad
 {
-    public partial class NotepadForm : Form
+    public interface INotepadView
     {
-        private NotepadHandler _notepadHandlerInstance;
-        private Settings _settings;
-        private bool _contentHasBeenChanged;
+        string MainTextBoxText { get; set; }
+    }
 
-        public NotepadForm(NotepadHandler notepadHandlerInstance)
+    public partial class NotepadForm : Form, INotepadView
+    {
+        private NotepadPresenter _notepadPresenter;
+        private bool ContentHasBeenChanged { get; set; }
+
+        public string MainTextBoxText
+        {
+            get { return mainTextBox.Text; }
+            set { mainTextBox.Text = value; }
+        }
+
+        public NotepadForm(INotepadModel notepadModel)
         {
             InitializeComponent();
-            _notepadHandlerInstance = notepadHandlerInstance;
-            _settings = _notepadHandlerInstance.LoadSettings();
-            ChangeFontSize(_settings.FontSize);
+            _notepadPresenter = new NotepadPresenter(notepadModel, this);
+            ChangeFontSize(_notepadPresenter.Settings.FontSize);
         }
 
         private DialogResult AskIfWantToSave()
@@ -29,15 +38,9 @@ namespace Notepad
             var messageBoxResult = MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNoCancel);
             if (messageBoxResult == DialogResult.Yes)
             {
-                _notepadHandlerInstance.Save(mainTextBox.Text);
+                _notepadPresenter.Save();
             }
             return messageBoxResult;
-        }
-
-        private void Clear()
-        {
-            mainTextBox.Clear();
-            _notepadHandlerInstance = new NotepadHandler(new FileSystemSaver(), new FileSystemSettingsSaver());
         }
 
         private void SubscribeContentChangesTracking(bool subscribe)
@@ -46,7 +49,7 @@ namespace Notepad
                 mainTextBox.TextChanged += TextChangedEventHandler;
             else
                 mainTextBox.TextChanged -= TextChangedEventHandler;
-            _contentHasBeenChanged = !subscribe;
+            ContentHasBeenChanged = !subscribe;
         }
 
         private void ChangeFontSize(float fontSize)
@@ -56,39 +59,39 @@ namespace Notepad
 
         private void NewClickEventHandler(object sender, EventArgs e)
         {
-            if (_contentHasBeenChanged)
+            if (ContentHasBeenChanged)
                 if (AskIfWantToSave() != DialogResult.Cancel)
                 {
-                    Clear();
+                    mainTextBox.Text = _notepadPresenter.Clear();
                     SubscribeContentChangesTracking(true);
                 }
         }
 
         private void SaveClickEventHandler(object sender, EventArgs e)
         {
-            if (_notepadHandlerInstance.Save(mainTextBox.Text) == Result.Saved)
-                if (_contentHasBeenChanged)
+            if (_notepadPresenter.Save() == Result.Saved)
+                if (ContentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
         }
 
         private void SaveAsClickEventHandler(object sender, EventArgs e)
         {
-            if (_notepadHandlerInstance.SaveAs(mainTextBox.Text) == Result.Saved)
-                if (_contentHasBeenChanged)
+            if (_notepadPresenter.SaveAs() == Result.Saved)
+                if (ContentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
         }
 
         private void LoadClickEventHandler(object sender, EventArgs e)
         {
-            if (_contentHasBeenChanged)
+            if (ContentHasBeenChanged)
                 if (AskIfWantToSave() == DialogResult.Cancel)
                     return;
 
-            string textFromLoadMethod = _notepadHandlerInstance.Load();
+            string textFromLoadMethod = _notepadPresenter.Load();
             if (textFromLoadMethod != null)
             {
                 mainTextBox.Text = textFromLoadMethod;
-                if (_contentHasBeenChanged)
+                if (ContentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
                 mainTextBox.TextChanged += TextChangedEventHandler;
             }
@@ -101,8 +104,8 @@ namespace Notepad
             if (dialogInstance.DialogResult == DialogResult.OK)
             {
                 ChangeFontSize(dialogInstance.FontSize);
-                _settings.FontSize = dialogInstance.FontSize;
-                _notepadHandlerInstance.SaveSettings(_settings);
+                _notepadPresenter.Settings.FontSize = dialogInstance.FontSize;
+                _notepadPresenter.SaveSettings();
             }
         }
 
@@ -113,7 +116,7 @@ namespace Notepad
 
         private void NotepadFormClosingEventHandler(object sender, FormClosingEventArgs e)
         {
-            if (_contentHasBeenChanged)
+            if (ContentHasBeenChanged)
                 if (AskIfWantToSave() == DialogResult.Cancel)
                     e.Cancel = true;
         }

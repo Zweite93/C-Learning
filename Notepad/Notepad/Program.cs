@@ -29,7 +29,7 @@ namespace Notepad
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new NotepadForm(new NotepadHandler(Container.MainContainer.Create<ITextSaver>(), (Container.MainContainer.Create<ISettingsSaver>()))));
+            Application.Run(new NotepadForm(new NotepadModel(Container.MainContainer.Create<ITextSaver>(), (Container.MainContainer.Create<ISettingsSaver>()))));
         }
 
     }
