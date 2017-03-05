@@ -1,3 +1,5 @@
 /Notepad/bin/
 /Notepad/obj/
+/Notepad/UnitTest/bin/
+/Notepad/UnitTest/obj/
 *.suo
