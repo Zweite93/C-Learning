@@ -15,6 +15,7 @@ namespace Notepad
         void LoadSettings();
         void Clear();
     }
+
     class NotepadPresenter : INotepadPresenter
     {
         private bool _isNew;
@@ -73,7 +74,11 @@ namespace Notepad
 
         public void LoadSettings()
         {
-            Settings = _settingsSaveMethod.Load();
+            Settings loadResult = _settingsSaveMethod.Load();
+            if (loadResult != null)
+                Settings = loadResult;
+            else
+                Settings = new Settings();
         }
 
         public void Clear()

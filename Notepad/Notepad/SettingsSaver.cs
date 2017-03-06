@@ -26,7 +26,10 @@ namespace Notepad
 
         public Settings Load()
         {
-            return JsonConvert.DeserializeObject<Settings>(File.ReadAllText(DefaultFileName));
+            if (File.Exists(DefaultFileName))
+                return JsonConvert.DeserializeObject<Settings>(File.ReadAllText(DefaultFileName));
+            else
+                return null;
         }
     }
 }

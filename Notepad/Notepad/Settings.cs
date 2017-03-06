@@ -8,7 +8,13 @@ namespace Notepad
 {
     public class Settings
     {
+        private const float DefaultFontSize = 11.0f;
         public float FontSize { get; set; }
+
+        public Settings()
+        {
+            FontSize = DefaultFontSize;
+        }
 
         public Settings(float fontSize)
         {
