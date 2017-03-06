@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Notepad
 {
-    static class Container
+    static class ContainerForIoCContainer
     {
         public static IoCContainer MainContainer
         {
@@ -23,13 +23,13 @@ namespace Notepad
         [STAThread]
         static void Main()
         {
-            Container.MainContainer = new IoCContainer();
-            Container.MainContainer.Register<ITextSaver, FileSystemSaver>();
-            Container.MainContainer.Register<ISettingsSaver, FileSystemSettingsSaver>();
+            ContainerForIoCContainer.MainContainer = new IoCContainer();
+            ContainerForIoCContainer.MainContainer.Register<ITextSaver, FileSystemSaver>();
+            ContainerForIoCContainer.MainContainer.Register<ISettingsSaver, FileSystemSettingsSaver>();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new NotepadForm(new NotepadModel(Container.MainContainer.Create<ITextSaver>(), (Container.MainContainer.Create<ISettingsSaver>()))));
+            Application.Run(new NotepadForm());
         }
 
     }

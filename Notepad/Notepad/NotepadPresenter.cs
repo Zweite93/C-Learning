@@ -6,48 +6,79 @@ using System.Threading.Tasks;
 
 namespace Notepad
 {
-    class NotepadPresenter
+    public interface INotepadPresenter
     {
-        private INotepadModel _notepadModel;
+        Result Save();
+        Result SaveAs();
+        Result Load();
+        void SaveSettings();
+        void LoadSettings();
+        void Clear();
+    }
+    class NotepadPresenter : INotepadPresenter
+    {
+        private bool _isNew;
+        private ITextSaver _saveMethod;
+        private ISettingsSaver _settingsSaveMethod;
         private INotepadView _notepadView;
+
         public Settings Settings { get; private set; }
 
-        public NotepadPresenter(INotepadModel notepadModel, INotepadView notepadView)
+        public NotepadPresenter(ITextSaver saveMethod, ISettingsSaver settingsSaveMethod, INotepadView notepadView)
         {
-            _notepadModel = notepadModel;
+            _isNew = true;
+            _saveMethod = saveMethod;
+            _settingsSaveMethod = settingsSaveMethod;
             _notepadView = notepadView;
-            Settings = this.LoadSettings();
-        }
-
-        public string Clear()
-        {
-            _notepadModel.Clear();
-            return "";
+            LoadSettings();
         }
 
         public Result Save()
         {
-            return _notepadModel.Save(_notepadView.MainTextBoxText);
+            if (_saveMethod.Save(_isNew, _notepadView.MainTextBoxText) == Result.Saved)
+            {
+                _isNew = false;
+                return Result.Saved;
+            }
+            return Result.NotSaved;
+
         }
 
         public Result SaveAs()
         {
-            return _notepadModel.SaveAs(_notepadView.MainTextBoxText);
+            if (_saveMethod.Save(true, _notepadView.MainTextBoxText) == Result.Saved)
+            {
+                _isNew = false;
+                return Result.Saved;
+            }
+            return Result.NotSaved;
         }
 
-        public string Load()
+        public Result Load()
         {
-            return _notepadModel.Load();
+            string loadResult = _saveMethod.Load();
+            if (loadResult != null)
+            {
+                _isNew = false;
+                _notepadView.MainTextBoxText = loadResult;
+                return Result.Loaded;
+            }
+            return Result.NotLoaded;
         }
 
         public void SaveSettings()
         {
-            _notepadModel.SaveSettings(Settings);
+            _settingsSaveMethod.Save(Settings);
         }
 
-        public Settings LoadSettings()
+        public void LoadSettings()
         {
-            return _notepadModel.LoadSettings();
+            Settings = _settingsSaveMethod.Load();
+        }
+
+        public void Clear()
+        {
+            _isNew = true;
         }
     }
 }

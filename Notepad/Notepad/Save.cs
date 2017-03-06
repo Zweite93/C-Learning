@@ -11,7 +11,9 @@ namespace Notepad
     public enum Result
     {
         Saved,
-        NotSaved
+        NotSaved,
+        Loaded,
+        NotLoaded
     }
     public interface ITextSaver
     {

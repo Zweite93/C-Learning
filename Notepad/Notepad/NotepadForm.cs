@@ -26,10 +26,15 @@ namespace Notepad
             set { mainTextBox.Text = value; }
         }
 
-        public NotepadForm(INotepadModel notepadModel)
+        public NotepadForm()
         {
             InitializeComponent();
-            _notepadPresenter = new NotepadPresenter(notepadModel, this);
+            _notepadPresenter = new NotepadPresenter
+                (
+                ContainerForIoCContainer.MainContainer.Create<ITextSaver>(),
+                ContainerForIoCContainer.MainContainer.Create<ISettingsSaver>(),
+                this
+                );
             ChangeFontSize(_notepadPresenter.Settings.FontSize);
         }
 
@@ -60,11 +65,11 @@ namespace Notepad
         private void NewClickEventHandler(object sender, EventArgs e)
         {
             if (ContentHasBeenChanged)
-                if (AskIfWantToSave() != DialogResult.Cancel)
-                {
-                    mainTextBox.Text = _notepadPresenter.Clear();
-                    SubscribeContentChangesTracking(true);
-                }
+                if (AskIfWantToSave() == DialogResult.Cancel)
+                    return;
+            mainTextBox.Clear();
+            _notepadPresenter.Clear();
+            SubscribeContentChangesTracking(true);
         }
 
         private void SaveClickEventHandler(object sender, EventArgs e)
@@ -86,15 +91,13 @@ namespace Notepad
             if (ContentHasBeenChanged)
                 if (AskIfWantToSave() == DialogResult.Cancel)
                     return;
-
-            string textFromLoadMethod = _notepadPresenter.Load();
-            if (textFromLoadMethod != null)
+            if (_notepadPresenter.Load() == Result.Loaded)
             {
-                mainTextBox.Text = textFromLoadMethod;
                 if (ContentHasBeenChanged)
                     SubscribeContentChangesTracking(true);
                 mainTextBox.TextChanged += TextChangedEventHandler;
             }
+
         }
 
         private void FontClickEventHandler(object sender, EventArgs e)
