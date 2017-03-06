@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Practices.Unity;
 
 namespace Notepad
 {
-    static class ContainerForIoCContainer
+    static class ContainerForUnity
     {
-        public static IoCContainer MainContainer
+        public static UnityContainer MainContainer
         {
             get;
             set;
@@ -23,9 +24,11 @@ namespace Notepad
         [STAThread]
         static void Main()
         {
-            ContainerForIoCContainer.MainContainer = new IoCContainer();
-            ContainerForIoCContainer.MainContainer.Register<ITextSaver, FileSystemSaver>();
-            ContainerForIoCContainer.MainContainer.Register<ISettingsSaver, FileSystemSettingsSaver>();
+
+            ContainerForUnity.MainContainer = new UnityContainer();
+            ContainerForUnity.MainContainer.RegisterType<ITextSaver, FileSystemSaver>();
+            ContainerForUnity.MainContainer.RegisterType<ISettingsSaver, FileSystemSettingsSaver>();
+            ContainerForUnity.MainContainer.RegisterType<INotepadPresenter, NotepadPresenter>();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Practices.Unity;
 
 namespace Notepad
 {
@@ -29,12 +30,13 @@ namespace Notepad
         public NotepadForm()
         {
             InitializeComponent();
-            _notepadPresenter = new NotepadPresenter
-                (
-                ContainerForIoCContainer.MainContainer.Create<ITextSaver>(),
-                ContainerForIoCContainer.MainContainer.Create<ISettingsSaver>(),
-                this
-                );
+            _notepadPresenter = (NotepadPresenter)(ContainerForUnity.MainContainer.Resolve<INotepadPresenter>(
+                new ResolverOverride[]
+                    {
+                        new ParameterOverride("saveMethod", ContainerForUnity.MainContainer.Resolve<ITextSaver>()),
+                        new ParameterOverride("settingsSaveMethod",ContainerForUnity.MainContainer.Resolve<ISettingsSaver>()),
+                        new ParameterOverride("notepadView", this)
+                    }));
             ChangeFontSize(_notepadPresenter.Settings.FontSize);
         }
 
