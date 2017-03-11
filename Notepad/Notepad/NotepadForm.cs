@@ -113,6 +113,11 @@ namespace Notepad
                 _notepadPresenter.SaveSettings();
             }
         }
+        private void PluginManagerClickEventHandler(object sender, EventArgs e)
+        {
+            var pluginManager = new PluginManagerForm(ContainerForUnity.MainContainer.Resolve<IPluginsLoader>());
+            pluginManager.ShowDialog();
+        }
 
         private void TextChangedEventHandler(object sender, EventArgs e)
         {

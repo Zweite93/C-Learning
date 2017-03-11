@@ -29,6 +29,7 @@ namespace Notepad
             ContainerForUnity.MainContainer.RegisterType<ITextSaver, FileSystemSaver>();
             ContainerForUnity.MainContainer.RegisterType<ISettingsSaver, FileSystemSettingsSaver>();
             ContainerForUnity.MainContainer.RegisterType<INotepadPresenter, NotepadPresenter>();
+            ContainerForUnity.MainContainer.RegisterType<IPluginsLoader, PluginsLoader>();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
