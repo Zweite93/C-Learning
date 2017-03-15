@@ -9,24 +9,19 @@ namespace Notepad
 {
     public interface IPluginPresenter
     {
-        Dictionary<string, Assembly> Load();
-        void Remove(string pluginName);
+        IPluginInfo Load();
     }
 
     public class PluginPresenter : IPluginPresenter
     {
         private IPluginsLoader _pluginLoader;
-        private IPluginExecutor _pluginExecutor;
-        private Dictionary<string, Assembly> _plugins;
 
-        public PluginPresenter(IPluginsLoader pluginLoader, IPluginExecutor pluginExecutor)
+        public PluginPresenter(IPluginsLoader pluginLoader)
         {
             _pluginLoader = pluginLoader;
-            _pluginExecutor = pluginExecutor;
-            _plugins = new Dictionary<string, Assembly>();
         }
 
-        public Dictionary<string, Assembly> Load()
+        public IPluginInfo Load()
         {
             var assembly = _pluginLoader.Load();
             if (assembly == null)
@@ -56,15 +51,10 @@ namespace Notepad
             }
             catch (Exception e)
             {
-                return null;
+                return new PluginInfo(assembly.FullName, assembly);
             }
 
-            _plugins.Add(pluginName, assembly);
-        }
-
-        public void Remove(string pluginName)
-        {
-            _plugins.Remove(pluginName);
+            return new PluginInfo(pluginName, assembly);
         }
     }
 }

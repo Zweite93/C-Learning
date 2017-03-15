@@ -64,6 +64,16 @@ namespace Notepad
             mainTextBox.Font = new Font(mainTextBox.Font.FontFamily, fontSize);
         }
 
+        private void AddToPluginsMenuItem()
+        {
+            foreach (var plugin in _notepadPresenter.Plugins)
+            {
+                if (pluginsMenuItem.DropDownItems.ContainsKey(plugin.Key))
+                    continue;
+                pluginsMenuItem.DropDownItems.Add(plugin.Key);
+            }
+        }
+
         private void NewClickEventHandler(object sender, EventArgs e)
         {
             if (ContentHasBeenChanged)
@@ -113,10 +123,13 @@ namespace Notepad
                 _notepadPresenter.SaveSettings();
             }
         }
+
         private void PluginManagerClickEventHandler(object sender, EventArgs e)
         {
-            var pluginManager = new PluginManager();
+            var pluginManager = new PluginManager(_notepadPresenter.Plugins);
             pluginManager.ShowDialog();
+            _notepadPresenter.Plugins = pluginManager.Plugins;
+            AddToPluginsMenuItem();
         }
 
         private void TextChangedEventHandler(object sender, EventArgs e)

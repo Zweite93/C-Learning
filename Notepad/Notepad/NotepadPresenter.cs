@@ -23,7 +23,7 @@ namespace Notepad
         private ITextSaver _textSaver;
         private ISettingsSaver _settingsSaver;
         private INotepadView _notepadView;
-        private Dictionary<string, Assembly> _plugins;
+        public Dictionary<string, Assembly> Plugins { get; set; }
 
         public Settings Settings { get; private set; }
 
@@ -33,7 +33,7 @@ namespace Notepad
             _textSaver = textSaver;
             _settingsSaver = settingsSaver;
             _notepadView = notepadView;
-            _plugins = new Dictionary<string, Assembly>();
+            Plugins = new Dictionary<string, Assembly>();
             LoadSettings();
         }
 

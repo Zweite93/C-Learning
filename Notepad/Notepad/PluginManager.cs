@@ -15,10 +15,16 @@ namespace Notepad
     public partial class PluginManager : Form
     {
         private IPluginPresenter _pluginPresenter;
-        private IPluginInfo _pluginInfo;
-        public PluginManager()
+        public Dictionary<string, Assembly> Plugins { get;  private set; }
+
+        public PluginManager(Dictionary<string, Assembly> plugins)
         {
             InitializeComponent();
+            Plugins = plugins;
+            foreach (var plugin in plugins)
+            {
+                ListOfPlugins.Items.Add(plugin.Key);
+            }
             _pluginPresenter = (PluginPresenter)(ContainerForUnity.MainContainer.Resolve<IPluginPresenter>(
                 new ResolverOverride[]
                     {
@@ -28,18 +34,27 @@ namespace Notepad
 
         private void AddPluginCickEventHandler(object sender, EventArgs e)
         {
-            //_pluginInfo = _pluginPresenter.Load();
-            if (_pluginInfo == null)
+            IPluginInfo pluginInfo = _pluginPresenter.Load();
+            if (ListOfPlugins.Items.Contains(pluginInfo.PluginName))
+            {
+                MessageBox.Show("Plugin already loaded", "Error.", MessageBoxButtons.OK);
+                return;
+            }
+            if (pluginInfo == null)
             {
                 MessageBox.Show("Incorrect plugin.", "Error.", MessageBoxButtons.OK);
                 return;
             }
-            ListOfPlugins.Items.Add(_pluginInfo.PluginName);
+            Plugins.Add(pluginInfo.PluginName, pluginInfo.PluginAssemby);
+            ListOfPlugins.Items.Add(pluginInfo.PluginName);
         }
 
         private void RemovePluginCickEventHandler(object sender, EventArgs e)
         {
-
+            if (ListOfPlugins.SelectedItem == null)
+                return;
+            Plugins.Remove(ListOfPlugins.SelectedItem.ToString());
+            ListOfPlugins.Items.Remove(ListOfPlugins.SelectedItem);
         }
     }
 }
