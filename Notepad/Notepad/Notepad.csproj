@@ -70,6 +70,8 @@
     <Compile Include="FontSizeDialog.Designer.cs">
       <DependentUpon>FontSizeDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="IPluginExecutor.cs" />
+    <Compile Include="IPluginInfo.cs" />
     <Compile Include="NotepadForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,9 +85,11 @@
     <Compile Include="PluginManager.Designer.cs">
       <DependentUpon>PluginManager.cs</DependentUpon>
     </Compile>
+    <Compile Include="PluginPresenter.cs" />
     <Compile Include="PluginsLoader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="Save.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsSaver.cs" />

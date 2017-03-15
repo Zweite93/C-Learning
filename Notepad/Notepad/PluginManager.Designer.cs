@@ -1,6 +1,6 @@
 ﻿namespace Notepad
 {
-    partial class PluginManagerForm
+    partial class PluginManager
     {
         /// <summary>
         /// Required designer variable.
@@ -30,6 +30,7 @@
         {
             this.ListOfPlugins = new System.Windows.Forms.ListBox();
             this.AddPluginButton = new System.Windows.Forms.Button();
+            this.RemovePluginButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // ListOfPlugins
@@ -53,14 +54,25 @@
             this.AddPluginButton.UseVisualStyleBackColor = true;
             this.AddPluginButton.Click += new System.EventHandler(this.AddPluginCickEventHandler);
             // 
-            // PluginManagerForm
+            // RemovePluginButton
+            // 
+            this.RemovePluginButton.Location = new System.Drawing.Point(93, 305);
+            this.RemovePluginButton.Name = "RemovePluginButton";
+            this.RemovePluginButton.Size = new System.Drawing.Size(75, 25);
+            this.RemovePluginButton.TabIndex = 2;
+            this.RemovePluginButton.Text = "Remove";
+            this.RemovePluginButton.UseVisualStyleBackColor = true;
+            this.RemovePluginButton.Click += new System.EventHandler(this.RemovePluginCickEventHandler);
+            // 
+            // PluginManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(472, 342);
+            this.Controls.Add(this.RemovePluginButton);
             this.Controls.Add(this.AddPluginButton);
             this.Controls.Add(this.ListOfPlugins);
-            this.Name = "PluginManagerForm";
+            this.Name = "PluginManager";
             this.Text = "Plugin Manager";
             this.ResumeLayout(false);
 
@@ -70,5 +82,6 @@
 
         private System.Windows.Forms.ListBox ListOfPlugins;
         private System.Windows.Forms.Button AddPluginButton;
+        private System.Windows.Forms.Button RemovePluginButton;
     }
 }

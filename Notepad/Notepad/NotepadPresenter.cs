@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,24 +20,26 @@ namespace Notepad
     class NotepadPresenter : INotepadPresenter
     {
         private bool _isNew;
-        private ITextSaver _saveMethod;
-        private ISettingsSaver _settingsSaveMethod;
+        private ITextSaver _textSaver;
+        private ISettingsSaver _settingsSaver;
         private INotepadView _notepadView;
+        private Dictionary<string, Assembly> _plugins;
 
         public Settings Settings { get; private set; }
 
-        public NotepadPresenter(ITextSaver saveMethod, ISettingsSaver settingsSaveMethod, INotepadView notepadView)
+        public NotepadPresenter(ITextSaver textSaver, ISettingsSaver settingsSaver, INotepadView notepadView)
         {
             _isNew = true;
-            _saveMethod = saveMethod;
-            _settingsSaveMethod = settingsSaveMethod;
+            _textSaver = textSaver;
+            _settingsSaver = settingsSaver;
             _notepadView = notepadView;
+            _plugins = new Dictionary<string, Assembly>();
             LoadSettings();
         }
 
         public Result Save()
         {
-            if (_saveMethod.Save(_isNew, _notepadView.MainTextBoxText) == Result.Saved)
+            if (_textSaver.Save(_isNew, _notepadView.MainTextBoxText) == Result.Saved)
             {
                 _isNew = false;
                 return Result.Saved;
@@ -47,7 +50,7 @@ namespace Notepad
 
         public Result SaveAs()
         {
-            if (_saveMethod.Save(true, _notepadView.MainTextBoxText) == Result.Saved)
+            if (_textSaver.Save(true, _notepadView.MainTextBoxText) == Result.Saved)
             {
                 _isNew = false;
                 return Result.Saved;
@@ -57,7 +60,7 @@ namespace Notepad
 
         public Result Load()
         {
-            string loadResult = _saveMethod.Load();
+            string loadResult = _textSaver.Load();
             if (loadResult != null)
             {
                 _isNew = false;
@@ -69,12 +72,12 @@ namespace Notepad
 
         public void SaveSettings()
         {
-            _settingsSaveMethod.Save(Settings);
+            _settingsSaver.Save(Settings);
         }
 
         public void LoadSettings()
         {
-            Settings loadResult = _settingsSaveMethod.Load();
+            Settings loadResult = _settingsSaver.Load();
             if (loadResult != null)
                 Settings = loadResult;
             else

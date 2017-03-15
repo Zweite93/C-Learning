@@ -8,30 +8,38 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Reflection;
+using Microsoft.Practices.Unity;
 
 namespace Notepad
 {
-    public partial class PluginManagerForm : Form
+    public partial class PluginManager : Form
     {
-        private IPluginsLoader _pluginsLoader;
-        public PluginManagerForm(IPluginsLoader pluginsLoader)
+        private IPluginPresenter _pluginPresenter;
+        private IPluginInfo _pluginInfo;
+        public PluginManager()
         {
             InitializeComponent();
-            _pluginsLoader = pluginsLoader;
+            _pluginPresenter = (PluginPresenter)(ContainerForUnity.MainContainer.Resolve<IPluginPresenter>(
+                new ResolverOverride[]
+                    {
+                        new ParameterOverride("pluginLoader", ContainerForUnity.MainContainer.Resolve<IPluginsLoader>())
+                    }));
         }
 
         private void AddPluginCickEventHandler(object sender, EventArgs e)
         {
-            var assembly = _pluginsLoader.Load();
-            var types = assembly.GetExportedTypes();
-            MethodInfo method;
-
-            foreach (var type in types)
+            //_pluginInfo = _pluginPresenter.Load();
+            if (_pluginInfo == null)
             {
-                method = type.GetMethod("ExecutePluginWork");
-                if (method != null)
-                    break;
+                MessageBox.Show("Incorrect plugin.", "Error.", MessageBoxButtons.OK);
+                return;
             }
+            ListOfPlugins.Items.Add(_pluginInfo.PluginName);
+        }
+
+        private void RemovePluginCickEventHandler(object sender, EventArgs e)
+        {
+
         }
     }
 }

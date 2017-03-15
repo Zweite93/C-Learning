@@ -8,13 +8,6 @@ using System.IO;
 
 namespace Notepad
 {
-    public enum Result
-    {
-        Saved,
-        NotSaved,
-        Loaded,
-        NotLoaded
-    }
     public interface ITextSaver
     {
         Result Save(bool isNew, string text);

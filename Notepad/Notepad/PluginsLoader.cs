@@ -20,7 +20,14 @@ namespace Notepad
             openFileDialog.Filter = "Assemby|*.dll";
             openFileDialog.ShowDialog();
             if (!String.IsNullOrEmpty(openFileDialog.FileName))
-                return Assembly.LoadFile(openFileDialog.FileName);
+                try
+                {
+                    return Assembly.LoadFile(openFileDialog.FileName);
+                }
+                catch(Exception e)
+                {
+                    return null;
+                }
             else
                 return null;
         }

@@ -33,8 +33,8 @@ namespace Notepad
             _notepadPresenter = (NotepadPresenter)(ContainerForUnity.MainContainer.Resolve<INotepadPresenter>(
                 new ResolverOverride[]
                     {
-                        new ParameterOverride("saveMethod", ContainerForUnity.MainContainer.Resolve<ITextSaver>()),
-                        new ParameterOverride("settingsSaveMethod",ContainerForUnity.MainContainer.Resolve<ISettingsSaver>()),
+                        new ParameterOverride("textSaver", ContainerForUnity.MainContainer.Resolve<ITextSaver>()),
+                        new ParameterOverride("settingsSaver",ContainerForUnity.MainContainer.Resolve<ISettingsSaver>()),
                         new ParameterOverride("notepadView", this)
                     }));
             ChangeFontSize(_notepadPresenter.Settings.FontSize);
@@ -115,7 +115,7 @@ namespace Notepad
         }
         private void PluginManagerClickEventHandler(object sender, EventArgs e)
         {
-            var pluginManager = new PluginManagerForm(ContainerForUnity.MainContainer.Resolve<IPluginsLoader>());
+            var pluginManager = new PluginManager();
             pluginManager.ShowDialog();
         }
 
