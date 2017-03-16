@@ -42,7 +42,7 @@ namespace Notepad
 
             PropertyInfo pinfo = executerType.GetProperty("PluginName", BindingFlags.Public | BindingFlags.Static);
             if (pinfo == null)
-                return null;
+                return new PluginInfo(assembly.FullName, assembly);
 
             string pluginName;
             try

@@ -121,6 +121,8 @@
             // 
             // pluginManagerMenuItem
             // 
+            this.pluginManagerMenuItem.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.pluginManagerMenuItem.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.pluginManagerMenuItem.Name = "pluginManagerMenuItem";
             this.pluginManagerMenuItem.Size = new System.Drawing.Size(158, 22);
             this.pluginManagerMenuItem.Text = "Plugin Manager";

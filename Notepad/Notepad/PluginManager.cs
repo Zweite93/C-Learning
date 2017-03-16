@@ -40,15 +40,15 @@ namespace Notepad
         {
             IPluginInfo pluginInfo = _pluginPresenter.Load();
 
-            if (ListOfPlugins.Items.Contains(pluginInfo.PluginName))
-            {
-                MessageBox.Show("Plugin already loaded", "Error.", MessageBoxButtons.OK);
-                return;
-            }
-
             if (pluginInfo == null)
             {
                 MessageBox.Show("Incorrect plugin.", "Error.", MessageBoxButtons.OK);
+                return;
+            }
+
+            if (ListOfPlugins.Items.Contains(pluginInfo.PluginName))
+            {
+                MessageBox.Show("Plugin already loaded", "Error.", MessageBoxButtons.OK);
                 return;
             }
 
