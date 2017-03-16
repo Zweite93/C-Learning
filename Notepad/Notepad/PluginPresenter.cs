@@ -37,6 +37,9 @@ namespace Notepad
                 return null;
             }
 
+            if (executerType.GetMethod("ExecutePluginWork", BindingFlags.Public | BindingFlags.Static) == null)
+                return null;
+
             if (executerType == null)
                 return null;
 
