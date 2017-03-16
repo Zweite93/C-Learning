@@ -64,13 +64,20 @@ namespace Notepad
             mainTextBox.Font = new Font(mainTextBox.Font.FontFamily, fontSize);
         }
 
-        private void AddToPluginsMenuItem()
+        private void BindPluginsMenuItem(IChangesInfo changes)
         {
-            foreach (var plugin in _notepadPresenter.Plugins)
+            foreach (var plugin in changes.Removed)
             {
-                if (pluginsMenuItem.DropDownItems.ContainsKey(plugin.Key))
-                    continue;
-                pluginsMenuItem.DropDownItems.Add(plugin.Key);
+                pluginsMenuItem.DropDownItems.RemoveByKey(plugin);
+            }
+
+            foreach (var plugin in changes.Added)
+            {
+                pluginsMenuItem.DropDownItems.Add(new ToolStripMenuItem(plugin) { Name = plugin });
+                pluginsMenuItem.DropDownItems[plugin].Click += (s, e) =>
+                {
+                    _notepadPresenter.ExecutePluginWork(plugin);
+                };
             }
         }
 
@@ -129,7 +136,7 @@ namespace Notepad
             var pluginManager = new PluginManager(_notepadPresenter.Plugins);
             pluginManager.ShowDialog();
             _notepadPresenter.Plugins = pluginManager.Plugins;
-            AddToPluginsMenuItem();
+            BindPluginsMenuItem(pluginManager._changesInfo);
         }
 
         private void TextChangedEventHandler(object sender, EventArgs e)

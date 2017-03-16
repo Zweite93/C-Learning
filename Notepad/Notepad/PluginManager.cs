@@ -15,16 +15,20 @@ namespace Notepad
     public partial class PluginManager : Form
     {
         private IPluginPresenter _pluginPresenter;
-        public Dictionary<string, Assembly> Plugins { get;  private set; }
+        public IChangesInfo _changesInfo;
+        public Dictionary<string, Assembly> Plugins { get; private set; }
 
         public PluginManager(Dictionary<string, Assembly> plugins)
         {
             InitializeComponent();
             Plugins = plugins;
+
             foreach (var plugin in plugins)
             {
                 ListOfPlugins.Items.Add(plugin.Key);
             }
+
+            _changesInfo = ContainerForUnity.MainContainer.Resolve<IChangesInfo>();
             _pluginPresenter = (PluginPresenter)(ContainerForUnity.MainContainer.Resolve<IPluginPresenter>(
                 new ResolverOverride[]
                     {
@@ -35,16 +39,20 @@ namespace Notepad
         private void AddPluginCickEventHandler(object sender, EventArgs e)
         {
             IPluginInfo pluginInfo = _pluginPresenter.Load();
+
             if (ListOfPlugins.Items.Contains(pluginInfo.PluginName))
             {
                 MessageBox.Show("Plugin already loaded", "Error.", MessageBoxButtons.OK);
                 return;
             }
+
             if (pluginInfo == null)
             {
                 MessageBox.Show("Incorrect plugin.", "Error.", MessageBoxButtons.OK);
                 return;
             }
+
+            _changesInfo.Added.Add(pluginInfo.PluginName);
             Plugins.Add(pluginInfo.PluginName, pluginInfo.PluginAssemby);
             ListOfPlugins.Items.Add(pluginInfo.PluginName);
         }
@@ -53,7 +61,15 @@ namespace Notepad
         {
             if (ListOfPlugins.SelectedItem == null)
                 return;
-            Plugins.Remove(ListOfPlugins.SelectedItem.ToString());
+
+            string selectedPluginName = ListOfPlugins.SelectedItem.ToString();
+
+            if (_changesInfo.Added.Contains(selectedPluginName))
+                _changesInfo.Added.Remove(selectedPluginName);
+            else
+                _changesInfo.Removed.Add(selectedPluginName);
+
+            Plugins.Remove(selectedPluginName);
             ListOfPlugins.Items.Remove(ListOfPlugins.SelectedItem);
         }
     }

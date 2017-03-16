@@ -13,6 +13,12 @@ namespace Notepad
         Assembly PluginAssemby { get; set; }
     }
 
+    public interface IChangesInfo
+    {
+        List<string> Added { get; set; }
+        List<string> Removed { get; set; }
+    }
+
     public class PluginInfo : IPluginInfo
     {
         public string PluginName { get; set; }
@@ -21,6 +27,18 @@ namespace Notepad
         {
             PluginName = name;
             PluginAssemby = assembly;
+        }
+    }
+
+    public class ChangesInfo : IChangesInfo
+    {
+        public List<string> Added { get; set; }
+        public List<string> Removed { get; set; }
+
+        public ChangesInfo() 
+        {
+            Added = new List<string>();
+            Removed = new List<string>();
         }
     }
 }

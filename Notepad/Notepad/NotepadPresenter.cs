@@ -88,5 +88,11 @@ namespace Notepad
         {
             _isNew = true;
         }
+
+        public void ExecutePluginWork(string pluginName)
+        {
+            //do plugin work
+            _notepadView.MainTextBoxText += pluginName;
+        }
     }
 }

@@ -37,7 +37,7 @@
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pluginManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pluginManagerMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -114,17 +114,17 @@
             // pluginsMenuItem
             // 
             this.pluginsMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pluginManagerToolStripMenuItem});
+            this.pluginManagerMenuItem});
             this.pluginsMenuItem.Name = "pluginsMenuItem";
             this.pluginsMenuItem.Size = new System.Drawing.Size(58, 20);
             this.pluginsMenuItem.Text = "Plugins";
             // 
-            // pluginManagerToolStripMenuItem
+            // pluginManagerMenuItem
             // 
-            this.pluginManagerToolStripMenuItem.Name = "pluginManagerToolStripMenuItem";
-            this.pluginManagerToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
-            this.pluginManagerToolStripMenuItem.Text = "Plugin Manager";
-            this.pluginManagerToolStripMenuItem.Click += new System.EventHandler(this.PluginManagerClickEventHandler);
+            this.pluginManagerMenuItem.Name = "pluginManagerMenuItem";
+            this.pluginManagerMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.pluginManagerMenuItem.Text = "Plugin Manager";
+            this.pluginManagerMenuItem.Click += new System.EventHandler(this.PluginManagerClickEventHandler);
             // 
             // NotepadForm
             // 
@@ -155,7 +155,7 @@
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fontToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pluginsMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pluginManagerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pluginManagerMenuItem;
     }
 }
 
