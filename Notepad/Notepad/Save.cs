@@ -23,6 +23,7 @@ namespace Notepad
             if (isNew)
             {
                 var dialog = new SaveFileDialog();
+                dialog.Filter = "Text file|*.txt";
                 dialog.ShowDialog();
                 _filePath = dialog.FileName;
             }
@@ -37,6 +38,7 @@ namespace Notepad
         public string Load()
         {
             var dialog = new OpenFileDialog();
+            dialog.Filter = "Text file|*.txt";
             dialog.ShowDialog();
             if (!String.IsNullOrEmpty(dialog.FileName))
                 return File.ReadAllText(dialog.FileName);

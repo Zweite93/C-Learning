@@ -14,11 +14,11 @@ namespace Notepad
 {
     public partial class PluginManager : Form
     {
-        private IPluginPresenter _pluginPresenter;
-        public IChangesInfo _changesInfo;
-        public Dictionary<string, Assembly> Plugins { get; private set; }
+        private IPluginsLoader _pluginsLoader;
+        public ChangesInfo _changesInfo;
+        public Dictionary<string, MethodInfo> Plugins { get; private set; }
 
-        public PluginManager(Dictionary<string, Assembly> plugins)
+        public PluginManager(Dictionary<string, MethodInfo> plugins)
         {
             InitializeComponent();
             Plugins = plugins;
@@ -28,23 +28,16 @@ namespace Notepad
                 ListOfPlugins.Items.Add(plugin.Key);
             }
 
-            _changesInfo = ContainerForUnity.MainContainer.Resolve<IChangesInfo>();
-            _pluginPresenter = (PluginPresenter)(ContainerForUnity.MainContainer.Resolve<IPluginPresenter>(
-                new ResolverOverride[]
-                    {
-                        new ParameterOverride("pluginLoader", ContainerForUnity.MainContainer.Resolve<IPluginsLoader>())
-                    }));
+            _pluginsLoader = ContainerForUnity.MainContainer.Resolve<IPluginsLoader>();
+            _changesInfo = new ChangesInfo();
         }
 
         private void AddPluginCickEventHandler(object sender, EventArgs e)
         {
-            IPluginInfo pluginInfo = _pluginPresenter.Load();
+            PluginInfo pluginInfo = _pluginsLoader.Load();
 
             if (pluginInfo == null)
-            {
-                MessageBox.Show("Incorrect plugin.", "Error.", MessageBoxButtons.OK);
                 return;
-            }
 
             if (ListOfPlugins.Items.Contains(pluginInfo.PluginName))
             {
@@ -53,7 +46,7 @@ namespace Notepad
             }
 
             _changesInfo.Added.Add(pluginInfo.PluginName);
-            Plugins.Add(pluginInfo.PluginName, pluginInfo.PluginAssemby);
+            Plugins.Add(pluginInfo.PluginName, pluginInfo.PluginExecuter);
             ListOfPlugins.Items.Add(pluginInfo.PluginName);
         }
 

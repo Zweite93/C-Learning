@@ -9,12 +9,16 @@ namespace Notepad
 {
     public interface INotepadPresenter
     {
+        Dictionary<string, MethodInfo> Plugins { get; set; }
+        Settings Settings { get; set; }
+
         Result Save();
         Result SaveAs();
         Result Load();
         void SaveSettings();
         void LoadSettings();
         void Clear();
+        void ExecutePluginWork(string pluginName);
     }
 
     class NotepadPresenter : INotepadPresenter
@@ -23,9 +27,9 @@ namespace Notepad
         private ITextSaver _textSaver;
         private ISettingsSaver _settingsSaver;
         private INotepadView _notepadView;
-        public Dictionary<string, Assembly> Plugins { get; set; }
+        public Dictionary<string, MethodInfo> Plugins { get; set; }
 
-        public Settings Settings { get; private set; }
+        public Settings Settings { get; set; }
 
         public NotepadPresenter(ITextSaver textSaver, ISettingsSaver settingsSaver, INotepadView notepadView)
         {
@@ -33,7 +37,7 @@ namespace Notepad
             _textSaver = textSaver;
             _settingsSaver = settingsSaver;
             _notepadView = notepadView;
-            Plugins = new Dictionary<string, Assembly>();
+            Plugins = new Dictionary<string, MethodInfo>();
             LoadSettings();
         }
 
@@ -91,8 +95,7 @@ namespace Notepad
 
         public void ExecutePluginWork(string pluginName)
         {
-            //do plugin work
-            _notepadView.MainTextBoxText += pluginName;
+            _notepadView.MainTextBoxText = Plugins[pluginName].Invoke(null, new object[] { _notepadView.MainTextBoxText }).ToString();
         }
     }
 }

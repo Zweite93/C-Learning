@@ -31,8 +31,7 @@ namespace Notepad
             ContainerForUnity.MainContainer.RegisterType<INotepadPresenter, NotepadPresenter>();
             ContainerForUnity.MainContainer.RegisterType<IPluginsLoader, PluginsLoader>();
             ContainerForUnity.MainContainer.RegisterType<IPluginExecutor, PluginExecutor>();
-            ContainerForUnity.MainContainer.RegisterType<IPluginPresenter, PluginPresenter>();
-            ContainerForUnity.MainContainer.RegisterType<IChangesInfo, ChangesInfo>();
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

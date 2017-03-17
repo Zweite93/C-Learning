@@ -18,7 +18,7 @@ namespace Notepad
 
     public partial class NotepadForm : Form, INotepadView
     {
-        private NotepadPresenter _notepadPresenter;
+        private INotepadPresenter _notepadPresenter;
         private bool ContentHasBeenChanged { get; set; }
 
         public string MainTextBoxText
@@ -30,13 +30,8 @@ namespace Notepad
         public NotepadForm()
         {
             InitializeComponent();
-            _notepadPresenter = (NotepadPresenter)(ContainerForUnity.MainContainer.Resolve<INotepadPresenter>(
-                new ResolverOverride[]
-                    {
-                        new ParameterOverride("textSaver", ContainerForUnity.MainContainer.Resolve<ITextSaver>()),
-                        new ParameterOverride("settingsSaver",ContainerForUnity.MainContainer.Resolve<ISettingsSaver>()),
-                        new ParameterOverride("notepadView", this)
-                    }));
+            _notepadPresenter = ContainerForUnity.MainContainer.Resolve<INotepadPresenter>(
+                new ResolverOverride[] { new ParameterOverride("notepadView", this) });
             ChangeFontSize(_notepadPresenter.Settings.FontSize);
         }
 
@@ -64,7 +59,7 @@ namespace Notepad
             mainTextBox.Font = new Font(mainTextBox.Font.FontFamily, fontSize);
         }
 
-        private void BindPluginsMenuItem(IChangesInfo changes)
+        private void BindPluginsMenuItem(ChangesInfo changes)
         {
             foreach (var plugin in changes.Removed)
             {
@@ -135,7 +130,6 @@ namespace Notepad
         {
             var pluginManager = new PluginManager(_notepadPresenter.Plugins);
             pluginManager.ShowDialog();
-            _notepadPresenter.Plugins = pluginManager.Plugins;
             BindPluginsMenuItem(pluginManager._changesInfo);
         }
 
