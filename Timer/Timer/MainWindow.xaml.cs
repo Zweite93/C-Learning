@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Timer
 {
@@ -9,17 +9,14 @@ namespace Timer
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int currentSecond;
         public MainWindow()
         {
             InitializeComponent();
-            currentSecond = 0;
-            var timer = new System.Threading.Timer(AddSecond, new AutoResetEvent(false), 0, 1000);
-        }
-
-        private void AddSecond(Object stateInfo)
-        {
-            this.timerTextBlock.Dispatcher.BeginInvoke((Action)(() => timerTextBlock.Text = currentSecond++.ToString()));
+            var currentSecond = 1;
+            var timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += (s, ea) => timerTextBlock.Text = currentSecond++.ToString();
+            timer.Start();
         }
     }
 }
