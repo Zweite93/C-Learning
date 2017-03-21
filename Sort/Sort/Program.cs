@@ -27,6 +27,7 @@ namespace Sort
     class MyList<T> where T : IComparable<T>
     {
         private List<T> _list;
+        const int firstItem = 0;
 
         public MyList()
         {
@@ -44,6 +45,12 @@ namespace Sort
             if (_list[_list.Count - 1].CompareTo(value) <= 0)
             {
                 _list.Add(value);
+                return;
+            }
+
+            if (_list[firstItem].CompareTo(value) >= 0)
+            {
+                _list.Insert(firstItem, value);
                 return;
             }
 
