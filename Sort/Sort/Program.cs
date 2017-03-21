@@ -10,29 +10,30 @@ namespace Sort
     {
         static void Main(string[] args)
         {
-            MyList list = new MyList();
+            MyList<int> list = new MyList<int>();
             list.Add(4);
             list.Add(1);
             list.Add(3);
             list.Add(2);
             list.Add(-1);
+            list.Add(3);
 
             list.Display();
         }
     }
 
-    class MyList
+    class MyList<T> where T : IComparable<T>
     {
-        private List<int> _list;
+        private List<T> _list;
 
         public MyList()
         {
-            _list = new List<int>();
+            _list = new List<T>();
         }
 
-        public void Add(int value)
+        public void Add(T value)
         {
-            int index = (_list.FindLastIndex(r => r <= value));
+            int index = (_list.FindLastIndex(r => r.CompareTo(value) <= 0));
             index++;
             _list.Insert(index, value);
         }
