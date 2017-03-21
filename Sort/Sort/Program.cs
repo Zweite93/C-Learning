@@ -35,6 +35,18 @@ namespace Sort
 
         public void Add(T value)
         {
+            if (_list.Count == 0)
+            {
+                _list.Add(value);
+                return;
+            }
+
+            if (_list[_list.Count - 1].CompareTo(value) <= 0)
+            {
+                _list.Add(value);
+                return;
+            }
+
             int index = (_list.FindLastIndex(r => r.CompareTo(value) <= 0));
             index++;
             _list.Insert(index, value);
