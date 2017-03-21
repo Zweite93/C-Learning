@@ -10,13 +10,15 @@ namespace Sort
     {
         static void Main(string[] args)
         {
-            MyList<int> list = new MyList<int>();
-            list.Add(4);
-            list.Add(1);
-            list.Add(3);
-            list.Add(2);
-            list.Add(-1);
-            list.Add(3);
+            UseList();
+        }
+
+        static void UseList()
+        {
+            var list = new MyList<MyClass>();
+            var rand = new Random();
+            for (int i = 0; i < 10; i++)
+                list.Add(new MyClass() { Value = rand.Next(-100, 100) });
 
             list.Display();
         }
@@ -44,6 +46,25 @@ namespace Sort
             {
                 Console.WriteLine(item);
             }
+        }
+    }
+
+    class MyClass : IComparable<MyClass>
+    {
+        public int Value { get; set; }
+        public MyClass()
+        {
+
+        }
+
+        public int CompareTo(MyClass other)
+        {
+            return Value.CompareTo(other.Value);
+        }
+
+        public override string ToString()
+        {
+            return Value.ToString();
         }
     }
 }
