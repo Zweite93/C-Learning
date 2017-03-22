@@ -10,31 +10,30 @@ namespace Search
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Search("12 3abc123a1", "a123"));
+            Console.WriteLine(Search("12 3abc123a123", "a123"));
         }
 
-        static bool Search(string stringToSearch, string word)
+        static bool Search(string text, string word)
         {
-            char[] chars = word.ToCharArray();
-            char firstWordChar = chars[0];
-
-            if (String.Equals(stringToSearch, word))
+            if (String.Equals(text, word))
                 return true;
 
-            for (int stringIndex = 0; stringIndex < stringToSearch.Length; stringIndex++)
+            char firstLetter = word[0];
+
+            for (int i = 0; i < text.Length; i++)
             {
-                if ((stringToSearch.Length - stringIndex) < chars.Length)
+                if ((text.Length - i) < word.Length)
                     return false;
 
-                if (stringToSearch[stringIndex] == firstWordChar)
+                if (text[i] == firstLetter)
                 {
-                    int secondStringIndex = stringIndex;
+                    int textIndex = i;
 
-                    for (int charsIndex = 1; charsIndex < chars.Length; charsIndex++)
+                    for (int j = 1; j < word.Length; j++)
                     {
-                        secondStringIndex++;
-                        if (stringToSearch[secondStringIndex] == chars[charsIndex])
-                            if (charsIndex == chars.Length - 1)
+                        textIndex++;
+                        if (text[textIndex] == word[j])
+                            if (j == word.Length - 1)
                                 return true;
                             else
                                 continue;
