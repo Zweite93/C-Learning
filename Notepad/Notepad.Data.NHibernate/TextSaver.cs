@@ -28,7 +28,6 @@ namespace Notepad.Data.NHibernate
             {
                 Content content = new Content()
                 {
-                    UserID = 1,
                     Text = text
                 };
                 _session.Save(content);
