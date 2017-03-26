@@ -5,15 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using Notepad.Data;
+using Notepad.Data.NHibernate;
 
 namespace Notepad
 {
-    public interface ITextSaver
-    {
-        Result Save(bool isNew, string text);
-        string Load();
-    }
-
     public class FileSystemSaver : ITextSaver
     {
         private string _filePath;

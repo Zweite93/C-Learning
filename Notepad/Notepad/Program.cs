@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Practices.Unity;
+using Notepad.Data;
+using Notepad.Data.NHibernate;
 
 namespace Notepad
 {
@@ -26,7 +28,7 @@ namespace Notepad
         {
 
             ContainerForUnity.MainContainer = new UnityContainer();
-            ContainerForUnity.MainContainer.RegisterType<ITextSaver, FileSystemSaver>();
+            ContainerForUnity.MainContainer.RegisterType<ITextSaver, DBSystemSaver>();
             ContainerForUnity.MainContainer.RegisterType<ISettingsSaver, FileSystemSettingsSaver>();
             ContainerForUnity.MainContainer.RegisterType<INotepadPresenter, NotepadPresenter>();
             ContainerForUnity.MainContainer.RegisterType<IPluginsLoader, PluginsLoader>();
