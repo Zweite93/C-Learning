@@ -17,7 +17,7 @@ namespace Sort
 
         public List<int> Sort(List<int> list)
         {
-            return _intSorter.Sort(list, 0, list.Count - 1);
+            return _intSorter.Sort(list);
         }
     }
 }

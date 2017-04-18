@@ -8,6 +8,6 @@ namespace Sort
 {
     public interface IIntSorter
     {
-        List<int> Sort(List<int> list, int left, int right);
+        List<int> Sort(List<int> list);
     }
 }

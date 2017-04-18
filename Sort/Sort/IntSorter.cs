@@ -8,7 +8,12 @@ namespace Sort
 {
     public class IntSorter : IIntSorter
     {
-        public List<int> Sort(List<int> list, int left, int right)
+        public List<int> Sort(List<int> list)
+        {
+            return Quicksort(list, 0, list.Count - 1);
+        }
+
+        private List<int> Quicksort(List<int> list, int left, int right)
         {
             if (left >= right)
                 return list;
@@ -36,9 +41,9 @@ namespace Sort
                 }
             }
             if (i < right)
-                Sort(list, i, right);
+                Quicksort(list, i, right);
             if (left < j)
-                Sort(list, left, j);
+                Quicksort(list, left, j);
             return list;
         }
     }
