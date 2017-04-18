@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Sort
 {
-    class Program
+    public interface IIntSorter
     {
-        static void Main()
-        {
-           
-        }
+        List<int> Sort(List<int> list, int left, int right);
     }
 }
