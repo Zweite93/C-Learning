@@ -12,7 +12,7 @@ namespace Sort.Tests
     {
         private static void SortTest(List<int> list, List<int> expectedResult)
         {
-            var sorter = new Sorter(new IntSorter());
+            var sorter = new Sorter(new IntBubblesorter());
             CollectionAssert.AreEqual(expectedResult, sorter.Sort(list));
         }
 

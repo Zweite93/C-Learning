@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IIntSorter.cs" />
-    <Compile Include="IntSorter.cs" />
+    <Compile Include="IntBubblesorter.cs" />
+    <Compile Include="IntQuicksorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sorter.cs" />

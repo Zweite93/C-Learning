@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sort
 {
-    public class IntSorter : IIntSorter
+    public class IntQuicksorter : IIntSorter
     {
         public List<int> Sort(List<int> list)
         {
