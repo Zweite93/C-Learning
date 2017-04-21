@@ -1,0 +1,11 @@
+﻿<Window x:Class="WPF_App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="250" Width="500">
+    <Grid>
+        <Slider Name="Red"  Margin="0,10,0,180" ValueChanged="Red_OnValueChanged" />
+        <Slider Name="Green" Margin="0,78,0,112" ValueChanged="Green_OnValueChanged" />
+        <Slider Name="Blue" Margin="0,44,0,146" ValueChanged="Blue_OnValueChanged" />
+        <Canvas Name="Canvas" Height="97" Margin="10,112,0,0" Width="472"/>
+    </Grid>
+</Window>
