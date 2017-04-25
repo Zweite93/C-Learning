@@ -26,14 +26,12 @@ namespace Notepad
         [STAThread]
         static void Main()
         {
-
             ContainerForUnity.MainContainer = new UnityContainer();
-            ContainerForUnity.MainContainer.RegisterType<ITextSaver, DBSystemSaver>();
+            ContainerForUnity.MainContainer.RegisterType<ITextSaver, DbSystemSaver>();
             ContainerForUnity.MainContainer.RegisterType<ISettingsSaver, FileSystemSettingsSaver>();
             ContainerForUnity.MainContainer.RegisterType<INotepadPresenter, NotepadPresenter>();
             ContainerForUnity.MainContainer.RegisterType<IPluginsLoader, PluginsLoader>();
             ContainerForUnity.MainContainer.RegisterType<IPluginExecutor, PluginExecutor>();
-
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

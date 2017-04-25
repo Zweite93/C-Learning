@@ -1,5 +1,6 @@
 ﻿using NHibernate;
 using NHibernate.Cfg;
+using Notepad.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,38 +9,43 @@ using System.Threading.Tasks;
 
 namespace Notepad.Data.NHibernate
 {
-    public class DBSystemSaver : ITextSaver
+    public class DbSystemSaver : ITextSaver
     {
-        private Configuration _configuration;
-        private ISessionFactory _sessionFactory;
-        private ISession _session;
+        private readonly ISession _session;
 
-        public DBSystemSaver()
+        public DbSystemSaver()
         {
-            _configuration = new Configuration();
-            _configuration.Configure();
-            _sessionFactory = _configuration.BuildSessionFactory();
-            _session = _sessionFactory.OpenSession();
+            _session = NHibernateHelper.OpenSession();
         }
 
-        public Result Save(bool isNew, string text)
+        public Result Save(bool isNew, Content content)
+        {
+            SaveToDb(content);
+            return Result.Saved;
+        }
+
+        public Content Load()
+        {
+            return LoadFromDb();
+        }
+        
+        private void SaveToDb(Content content)
         {
             using (_session.BeginTransaction())
             {
-                Content content = new Content()
-                {
-                    Text = text
-                };
-                _session.Save(content);
+                var user = new User();
+                user.Name = "UserName";
+                user.Contents = new List<Content>();
+                user.Contents.Add(new Content(){Text = "Text", User = user});
+                _session.Save(user);
                 _session.Transaction.Commit();
-                return Result.Saved;
             }
-
         }
 
-        public string Load()
+        private Content LoadFromDb()
         {
-            throw new NotImplementedException();
+            var content = _session.Load<Content>(1);
+            return content;
         }
     }
 }

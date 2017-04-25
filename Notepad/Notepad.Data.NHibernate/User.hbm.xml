@@ -2,11 +2,14 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
                    assembly="Notepad.Models"
                    namespace="Notepad.Models">
-  <class name="Content">
-    <id name ="ID" column="ID">
+  <class name="User">
+    <id name ="UserID" column="UserID">
       <generator class="identity"/>
     </id>
-    <many-to-one name="User" class="User" column="UserID"/>
-    <property name="Text"/>
+    <property name="Name"/>
+    <bag name="Contents" inverse="true">
+      <key column="ID"/>
+      <one-to-many class="Content"/>
+    </bag>
   </class>
 </hibernate-mapping>

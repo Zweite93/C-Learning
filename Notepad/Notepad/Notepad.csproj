@@ -132,6 +132,10 @@
       <Project>{512b8884-c984-4a5b-abd1-3d3d43600301}</Project>
       <Name>Notepad.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Notepad.Model\Notepad.Models.csproj">
+      <Project>{cb7066ad-9060-4020-9070-30453b9ca4cf}</Project>
+      <Name>Notepad.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

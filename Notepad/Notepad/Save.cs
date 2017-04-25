@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 using Notepad.Data;
 using Notepad.Data.NHibernate;
+using Notepad.Models;
 
 namespace Notepad
 {
@@ -14,7 +15,7 @@ namespace Notepad
     {
         private string _filePath;
 
-        public Result Save(bool isNew, string text)
+        public Result Save(bool isNew, Content content)
         {
             if (isNew)
             {
@@ -25,19 +26,19 @@ namespace Notepad
             }
             if (!String.IsNullOrEmpty(_filePath))
             {
-                File.WriteAllText(_filePath, text);
+                File.WriteAllText(_filePath, content.Text);
                 return Result.Saved;
             }
             return Result.NotSaved;
         }
 
-        public string Load()
+        public Content Load()
         {
             var dialog = new OpenFileDialog();
             dialog.Filter = "Text file|*.txt";
             dialog.ShowDialog();
             if (!String.IsNullOrEmpty(dialog.FileName))
-                return File.ReadAllText(dialog.FileName);
+                return new Content() { Text = File.ReadAllText(dialog.FileName) };
             else
                 return null;
         }

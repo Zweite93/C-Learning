@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Practices.Unity;
+using System.Reflection;
+using System.Linq.Expressions;
 
 namespace Notepad
 {
@@ -18,7 +20,7 @@ namespace Notepad
 
     public partial class NotepadForm : Form, INotepadView
     {
-        private INotepadPresenter _notepadPresenter;
+        private readonly INotepadPresenter _notepadPresenter;
         private bool ContentHasBeenChanged { get; set; }
 
         public string MainTextBoxText
@@ -26,12 +28,19 @@ namespace Notepad
             get { return mainTextBox.Text; }
             set { mainTextBox.Text = value; }
         }
+        public static MemberInfo GetMemberInfo<T, U>(Expression<Func<T, U>> expression)
+        {
+            var member = expression.Body as MemberExpression;
+            if (member != null)
+                return member.Member;
+
+            throw new ArgumentException("Expression is not a member access", "expression");
+        }
 
         public NotepadForm()
         {
             InitializeComponent();
-            _notepadPresenter = ContainerForUnity.MainContainer.Resolve<INotepadPresenter>(
-                new ResolverOverride[] { new ParameterOverride("notepadView", this) });
+            _notepadPresenter = ContainerForUnity.MainContainer.Resolve<INotepadPresenter>(new ParameterOverride("notepadView", this));
             ChangeFontSize(_notepadPresenter.Settings.FontSize);
         }
 

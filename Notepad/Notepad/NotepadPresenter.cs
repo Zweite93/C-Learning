@@ -1,4 +1,5 @@
 ﻿using Notepad.Data;
+using Notepad.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,10 @@ namespace Notepad
     class NotepadPresenter : INotepadPresenter
     {
         private bool _isNew;
-        private ITextSaver _textSaver;
-        private ISettingsSaver _settingsSaver;
-        private INotepadView _notepadView;
+        private readonly ITextSaver _textSaver;
+        private readonly ISettingsSaver _settingsSaver;
+        private readonly INotepadView _notepadView;
+        private Content _content;
         public Dictionary<string, MethodInfo> Plugins { get; set; }
 
         public Settings Settings { get; set; }
@@ -38,13 +40,15 @@ namespace Notepad
             _textSaver = textSaver;
             _settingsSaver = settingsSaver;
             _notepadView = notepadView;
+            _content = new Content();
             Plugins = new Dictionary<string, MethodInfo>();
             LoadSettings();
         }
 
         public Result Save()
         {
-            if (_textSaver.Save(_isNew, _notepadView.MainTextBoxText) == Result.Saved)
+            _content.Text = _notepadView.MainTextBoxText;
+            if (_textSaver.Save(_isNew, _content) == Result.Saved)
             {
                 _isNew = false;
                 return Result.Saved;
@@ -55,7 +59,8 @@ namespace Notepad
 
         public Result SaveAs()
         {
-            if (_textSaver.Save(true, _notepadView.MainTextBoxText) == Result.Saved)
+            _content.Text = _notepadView.MainTextBoxText;
+            if (_textSaver.Save(true, _content) == Result.Saved)
             {
                 _isNew = false;
                 return Result.Saved;
@@ -65,14 +70,15 @@ namespace Notepad
 
         public Result Load()
         {
-            string loadResult = _textSaver.Load();
-            if (loadResult != null)
-            {
-                _isNew = false;
-                _notepadView.MainTextBoxText = loadResult;
-                return Result.Loaded;
-            }
-            return Result.NotLoaded;
+            _content = _textSaver.Load();
+
+            if (_content == null)
+                return Result.NotLoaded;
+
+            _isNew = false;
+            _notepadView.MainTextBoxText = _content.Text;
+            return Result.Loaded;
+
         }
 
         public void SaveSettings()
@@ -83,10 +89,7 @@ namespace Notepad
         public void LoadSettings()
         {
             Settings loadResult = _settingsSaver.Load();
-            if (loadResult != null)
-                Settings = loadResult;
-            else
-                Settings = new Settings();
+            Settings = loadResult ?? new Settings();
         }
 
         public void Clear()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Notepad.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Notepad.Data
 {
     public interface ITextSaver
     {
-        Result Save(bool isNew, string text);
-        string Load();
+        Result Save(bool isNew, Content content);
+        Content Load();
     }
 }
